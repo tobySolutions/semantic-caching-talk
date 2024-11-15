@@ -9,53 +9,32 @@ const index = new Index(DBConfig);
 const semanticCache = new SemanticCache({ index, minProximity: 0.85 });
 
 async function runCache() {
-  // Basic Semantic Retrieval
-  //   await semanticCache.set("Capital of Turkey", "Ankara");
-
   // Handling Synonyms
-  //   await semanticCache.set("largest city in USA by population", "New York");
+  await semanticCache.set("largest city in USA by population", "New York");
 
-  // Multilingual Queries
-  //   await semanticCache.set("German Chancellor", "Olaf Scholz");
+  while (true) {
+    await delay(1000);
 
-  // Complex Queries
-  //   await semanticCache.set("year in which the Berlin wall fell", "1989");
+    const startTime = performance.now();
 
-  // Different Contexts
-  //   await semanticCache.set("the chemical formula for water", "H2O");
-  //   await semanticCache.set("the healthiest drink on a hot day", "water");
+    const result = await semanticCache.get("Largest population in USA by city");
 
-  await delay(1000);
+    const endTime = performance.now();
 
-  // 👇 outputs: "Ankara"
-  //   const result = await semanticCache.get("Capital in Turkey");
+    const timeTaken = endTime - startTime;
 
-  // 👇 outputs "New York"
-  // const result = await semanticCache.get("which is the most populated city in the USA?");
-
-  // 👇 "Who is the chancellor of Germany?" -> outputs "Olaf Scholz"
-  //   const result = await semanticCache.get(
-  //     "Wer ist der Bundeskanzler von Deutschland?"
-  //   );
-
-  // 👇 outputs "1989"
-  //   const result = await semanticCache.get(
-  //     "what's the year the Berlin wall destroyed?"
-  //   );
-
-  // 👇 outputs "water"
-  const result = await semanticCache.get(
-    "what should i drink when it's hot outside?"
-  );
-
-  // 👇 outputs "H2O"
-  const OtherResult = await semanticCache.get(
-    "tell me water's chemical formula"
-  );
-  console.log(result, OtherResult);
+    // Log the result and time taken
+    console.log([
+      {
+        type: "Cached response",
+        response: result,
+        timeTaken: `${timeTaken.toFixed(2)} ms`,
+      },
+    ]);
+  }
 }
 
-function delay(ms: number) {
+export function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
